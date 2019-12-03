@@ -1,0 +1,26 @@
+---
+- name: Add Docker GPG key
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+  become: true
+
+- name: Install basic list of packages
+  apt:
+    name: ['apt-transport-https','ca-certificates','curl','gnupg2','software-properties-common']
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Add Docker APT repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/{{ansible_distribution|lower}} {{ansible_distribution_release}} stable
+  become: true
+
+- name: Install Docker packages
+  apt:
+    name: ['docker-ce','docker-ce-cli','containerd.io']
+    state: present
+  become: true
+
+- name: Install Docker-compose
+  shell: curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+  become: true

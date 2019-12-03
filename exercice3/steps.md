@@ -60,3 +60,50 @@ ansible -i inventory gitlab-runner -m ping
 ```bash
 ansible -i inventory gitlab-runner  gitlab-runner.yml --extra-var gitlab_registration_token='TOKEN'
 ```
+
+
+
+## run project ci tests
+
+gitlabci + docker runner
+
+## deploy on success
+
+
+```yaml
+deploy_app:
+  stage: deploy
+  tags:
+    - ansible
+  script:
+    - 'ansible-playbook -i staging deploy.yml'
+```
+
+
+```bash
+- hosts: gitlab_runner
+  …
+  - tasks:
+   - name: create ssh key if it does not exist
+      expect:
+        command: ssh-keygen -t rsa
+        # only creates the key if the file does not exist
+        creates: "{{ runner_user_home }}/.ssh/id_rsa"
+        ...
+        responses:
+          "file": "{{ runner_user_home }}/.ssh/id_rsa"
+          "passphrase": ""
+   - name: read public key
+      command: "cat {{ runner_user_home }}/.ssh/id_rsa.pub"
+      register: runner_pub_key
+
+
+- hosts: deploy_target
+  …
+  - tasks:
+   - name: add deploy key to authorized keys
+      authorized_key:
+        user: "{{ user }}"
+        key: "{{ hostvars[ deploy_source_host ].runner_pub_key.stdout}}"
+
+```
