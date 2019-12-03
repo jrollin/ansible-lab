@@ -38,4 +38,25 @@ When succeed
 
 * Access gilab on VM HOST 
 * change password with 'adminadmin'
-* acess admin with 'root' and previous password
+* access admin with 'root' and previous password
+
+
+
+## Ajouter des runners
+
+Go to URL '/admin/runners' to retrieve runner token
+
+
+```bash
+ansible-playbook -i inventory gitlab-runner.yml
+```
+
+Check everything ok
+
+```bash
+ansible -i inventory gitlab-runner -m ping 
+```
+
+```bash
+ansible -i inventory gitlab-runner  gitlab-runner.yml --extra-var gitlab_registration_token='TOKEN'
+```

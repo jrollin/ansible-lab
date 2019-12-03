@@ -1,1 +1,10 @@
 gitlab_external_url: "http://192.168.33.10"
+
+#todo change with url and token
+gitlab_url: 'http://192.168.33.10'
+gitlab_registration_token: ''
+gitlab_runner_description: '{{ansible_hostname}}'
+gitlab_runner_tags:
+  - node
+gitlab_runner_executor: 'docker'
+gitlab_runner_docker_image: 'alpine:latest'

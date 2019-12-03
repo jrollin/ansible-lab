@@ -2,6 +2,8 @@
 
 @todo resume
 
+cf : vagrant.md
+
 # The LAB
 
 
