@@ -1,0 +1,13 @@
+---
+ -
+  hosts: all
+  sudo: true
+  tasks:
+   -
+    apt: "name=nginx state=latest"
+    name: "ensure nginx is at the latest version"
+   -
+    name: "start nginx"
+    service:
+     name: nginx
+     state: started
