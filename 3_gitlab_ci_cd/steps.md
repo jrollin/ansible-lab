@@ -1,4 +1,21 @@
-# Ansible CI
+# Gitlab + CI + CD with Ansible
+
+@todo : Vagrant + ansible
+
+## What you will learn
+
+@todo
+
+## What you will build
+
+@todo : schema
+
+## What you Need
+
+@todo
+
+
+
 
 * Install gitlabce with ansible galaxy
 * scm git to build code
@@ -13,7 +30,7 @@ Install inline :
 ```bash
 ansible-galaxy install geerlingguy.gitlab
 ```
-or 
+or (recommanded)
 
 Install role from file : 
 
