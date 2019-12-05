@@ -29,6 +29,9 @@ vagrant up
 ### SSH Errors
 
 
+SSH key change after destroying an VM for example. 
+The fingerprint registered in your known hosts have changed
+
 Example de warning : 
 ```bash
 WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!

@@ -33,6 +33,8 @@ Nb: you can use another recommanded box provider "bento"
 
 ```bash
 vagrant init bento/centos-7.7
+vagrant init bento/ubuntu-18.10
+
 ```
 
 Run box
@@ -50,7 +52,7 @@ vagrant ssh
 
 ### Static  IP
 
-```bash
+```ruby
 Vagrant.configure("2") do |config|
     # Configure web server machine
      config.vm.define "web" do |web1|
@@ -91,7 +93,7 @@ Basic shell provisioning :
  echo "Hello !" >> /var/www/html/index.html
 ```
 
-```bash
+```ruby
 Vagrant.configure("2") do |config|
     # Configure web server machine
      config.vm.define "web" do |web1|
@@ -116,8 +118,8 @@ vagrant reload --provision
 
 Add current directory to vm 
 
-```bash
-    web1.vm.synced_folder ".", "/home/vagrant/files"s
+```ruby
+web1.vm.synced_folder ".", "/home/vagrant/files"s
 ```
 
 Reload vagrant 
@@ -131,8 +133,8 @@ vagrant reload
 
 Forwar host port 8000 to vm guest port 80
 
-```
-    web.vm.network "forwarded_port", guest: 80, host: 8000
+```ruby
+web.vm.network "forwarded_port", guest: 80, host: 8000
 ```
 
 Reload vagrant 
@@ -143,32 +145,46 @@ vagrant reload
 
 ## Ansible commands
 
-> @todo  add -u vagrant ?
 
-### Modules
+Notes about using vagrant with ansible :
+
+* ssh keys are already provisionned by vagrant when creating a box
+* the ssh user is vagrant
+* ssh private key is located in '.vagrant/machines/<VM_NAME>/virtualbox/private_key' 
+* ssh port is 2222
+  
+Tips to know ports 
+
+```bash
+vagrant port
+```
+
+### Ansible modules
 
 Use Ping module for all machine with all parameters specified
 
 ```bash
-ansible all -i '192.168.33.10,'  -m ping -u vagrant  --private-key=./.vagrant/machines/default/virtualbox/private_key 
+ansible all -i '192.168.33.10,' -m ping -u vagrant  --private-key=./.vagrant/machines/default/virtualbox/private_key 
 ```
-> Nb: private key location change with your vagrant box configurations
+> Nb: this method is not the "ansible way", you should use an inventory file
 
 
-Define inventory file 'hosts'
+Define inventory file 'hosts' and add this line
 
 ```bash
 192.168.33.10 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/default/virtualbox/private_key'
 ```
 
-Ping using inventory 
+Use ping module using inventory 
 
 ```bash
 ansible all -i hosts  -m ping 
 ```
 
+> Nb: we did not defined sections in our inventory file so we use 'all'
 
-Get infos about machine 
+
+Use Setup module to get infos about vm 
 
 ```bash
 ansible all -i hosts  -m setup
@@ -178,19 +194,80 @@ ansible all -i hosts  -m setup
 > ansible all -i hosts -m setup | sed '1c {'|jq 
 
 
-Restart nginx
+Use module apt to install Nginx
 
 ```bash
-ansible all -i hosts -m service -a "name=nginx state=restarted"
+ansible all -i hosts -m apt -b -a "name=nginx state=latest"
+```
+
+> Nb : use '-b' argument to use sudo (required here)
+
+> Nb : we use apt for debian, use yum package manager for centos
+
+Use module service to restart nginx
+
+```bash
+ansible all -i hosts -m service -b -a "name=nginx state=restarted"
+```
+
+### Define ansible playbook to install Nginx
+
+
+Define hosts 
+
+```yaml
+---
+  - hosts: all
+```
+> '---' is not mandatory but it designated Yaml file to interpretor
+
+Need Sudo 
+
+```yaml
+---
+  - hosts: all
+    become: true
+```
+
+Add task to ensure nginx service is installed
+
+```yaml
+---
+  - hosts: all
+    become: true
+    tasks:
+    -
+      name: "Ensure nginx is at the latest version"
+      apt: "name=nginx state=latest"
 
 ```
 
 
-### Use vagrant with ansible playbook
+Add task to ensure nginx is started
 
-Replace shell script to use ansible provision :
+```yaml
+---
+  - hosts: all
+    become: true
+    tasks:
+    -
+      name: "Ensure nginx is at the latest version"
+      apt: "name=nginx state=latest"
+    -
+      name: "start nginx"
+      service:
+        name: nginx
+        state: started
 
-```bash
+```
+
+
+### Use Ansible playbook with Vagrant provider
+
+
+Use 'ansible_local' provisioning
+
+```ruby
 config.vm.provision "ansible_local" do |ans|
     ans.playbook = "playbook.yml"
     ans.install = true
@@ -198,11 +275,21 @@ config.vm.provision "ansible_local" do |ans|
 end
 ```
 
-### Use ansible without vagrant provider
+Reload VM with new provision
+
+```bash
+vagrant provision
+```
+
+### Use Ansible playbook in standalone
 
 Replace shell script to use ansible provision :
 
-@todo
+```bash
+ansible-playbook -i hosts playbook.yml
+```
+
+> Nb: we do not define host 'all'
 
 
 
