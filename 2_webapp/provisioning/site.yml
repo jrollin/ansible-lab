@@ -1,0 +1,18 @@
+# site.yml
+---
+
+- name: Apply common configuration to all hosts
+  hosts: all
+  remote_user: vagrant
+  become: yes
+  
+  roles:
+    - common
+
+- name: Apply Web configuration to web hosts
+  hosts: web
+  remote_user: vagrant
+  become: yes
+  
+  roles:
+    - web

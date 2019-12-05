@@ -1,22 +1,18 @@
 # Vagrant and Ansible Essentials
 
-@todo : Vagrant + ansible
+Lean how to setup local environnement with Vagrant
+Understand ansible commands and configuration management
 
 ## What you will learn
 
-* init local env for using ansible
-* boot 2 vm
-* vm with shell script
+* setup vagrant boxes 
+* configure ansible with vagrant
+* define ansible tasks 
 * sync folder
 
 ## What you will build
 
-@todo : schema
-
-## What you Need
-
-@todo
-
+An HTTP server with Nginx to serve local HTML file
 
 
 ## Vagrant 
@@ -200,7 +196,7 @@ Use module apt to install Nginx
 ansible all -i hosts -m apt -b -a "name=nginx state=latest"
 ```
 
-> Nb : use '-b' argument to use sudo (required here)
+> Nb : use '-b' argument to make vagrant user use sudo (required)
 
 > Nb : we use apt for debian, use yum package manager for centos
 
@@ -295,8 +291,17 @@ ansible-playbook -i hosts playbook.yml
 
 ## Exercice
 
-* Start a VM with IP 192.169.10.99
-* Provision VM with Nginx server
+### Configure an Nginx HTTP Server 
+
+* Start a VM with static IP 192.169.10.99
+* use ansible to configure VM with Nginx server
 * Serve local HTML files with VM server
 
+How to check everything is ok ?
+
+You should see your html page content with this command
+
+```bash
+curl 192.169.10.99
+```
 

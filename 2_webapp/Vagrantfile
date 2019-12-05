@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-18.10"
+
+  # proxy
+  config.vm.define "proxy" do |web|
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+      vb.cpus = 1
+    end
+    web.vm.network "private_network", ip: "192.168.20.11"
+  end
+
+   # web
+   config.vm.define "web1" do |web|
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+      vb.cpus = 1
+     end
+    web.vm.network "private_network", ip: "192.168.20.21"
+  end
+
+  config.vm.define "web2" do |web|
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+      vb.cpus = 1
+     end
+    web.vm.network "private_network", ip: "192.168.20.22"
+  end
+
+  # database
+  config.vm.define "database" do |web|
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = 512
+      vb.cpus = 1
+     end
+    web.vm.network "private_network", ip: "192.168.20.31"
+  end
+end

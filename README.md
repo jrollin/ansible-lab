@@ -1,14 +1,22 @@
 # Getting starting with Ansible Lab
 
-@todo resume course
-
-# The LAB
-
-# Exercices
+Pratice Ansible with virtual machines (vagrant)
 
 
+## Labs
 
-## Tips 
+* [Essentials](1_essentials/steps.md)
+* [Web app](2_webapp/steps.md)
+* [gitlab + ci + cd](3_gitlab_ci_cd/steps.md)
+
+## Tools used
+
+* Virtualbox : 6.x
+* Vagrant : 2.2.x
+* Ansible 2.9.x
+
+
+## Notes / Tips 
 
 ### Vagrant boxes 
 

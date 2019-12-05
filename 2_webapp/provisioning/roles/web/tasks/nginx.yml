@@ -1,0 +1,27 @@
+---
+
+- name: "Ensure nginx is at the latest version"
+  apt: 
+    name: nginx 
+    state: latest
+
+
+- name: configure html files
+  template: 
+    src: index.html.j2 
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart nginx
+
+- name: Copy application files
+  copy:
+    src: "{{ role_path }}/files/images"
+    dest: /var/www/html
+  notify: restart nginx
+
+- name: "start nginx"
+  service:
+    name: nginx
+    state: started
