@@ -198,6 +198,8 @@ From repository using git module
     version: release-0.22
 ```
 
+
+
 ## Gather all roles
 
 By convention, define a site.ym with calls all needed roles for specified hosts
@@ -230,6 +232,20 @@ Use ansible playbook
 ansible-playbook -i provisioning/inventory.ini provisioning/site.yml
 ```
 
+### Ansible Modules
+
+* Ansible provide a [List of modules](https://docs.ansible.com/ansible/latest/user_guide/modules_intro.html)
+* You can also use community based roles on [Ansible Galaxy](https://galaxy.ansible.com/) 
+
+> Nb: Ansible is migrating to [collections](https://www.ansible.com/blog/thoughts-on-restructuring-the-ansible-project)
+
+
+### Testing
+
+Ansible provide a set of tools to test your playbook and roles ([Article Ansible](https://www.ansible.com/blog/testing-ansible-roles-with-docker)
+[Molecule framework](https://github.com/ansible/molecule) can help too
+
+
 ## Exercices
 
 ### Configure Proxy role
@@ -242,7 +258,7 @@ Tips :
 * use group variables 
 
 
-How to check ? 
+#### How to check ? 
 
 You should see web1 or web2 page content each time you refresh proxy IP
 
@@ -252,5 +268,12 @@ You should see web1 or web2 page content each time you refresh proxy IP
 * create role database for vm
 * configure connection in web application code 
 
+
 Tips : 
 * use group variables
+
+
+
+#### How to check ? 
+
+Display list from database table

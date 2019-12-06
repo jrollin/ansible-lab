@@ -297,7 +297,7 @@ ansible-playbook -i hosts playbook.yml
 * use ansible to configure VM with Nginx server
 * Serve local HTML files with VM server
 
-How to check everything is ok ?
+#### How to check ?
 
 You should see your html page content with this command
 
