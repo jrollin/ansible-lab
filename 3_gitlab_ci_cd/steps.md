@@ -198,6 +198,8 @@ deploy-master:
 
 ```
 
+Gitlab Ci now deploy code to specified machines on Success !
+
 
 An optimization would use playbook
 
@@ -230,12 +232,19 @@ ansible-playbook -i $INVENTORY deploy.yml -b -u vagrant  --private-key=$SSH_PRIV
 ```
 
 
-## Going Further
+## Going Further 
 
 Beware This code is for demonstration only :)
 
+### Pushing VS Pulling Code 
 
-* store artefacts in repository and pass reference to ansible
-* ansible tower / awx to manage playbooks / privileges / inventories
-  
+We used Deploy server to push code
+
+A better approach notify machines a new code is ready to deploy
+Machines pull code from artefact repository 
+
+### Manage roles an permissions
+
+ansible tower / awx let ops manage playbooks / privileges / inventories  
+
 
