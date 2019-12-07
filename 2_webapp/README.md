@@ -243,8 +243,28 @@ ansible-playbook -i provisioning/inventory.ini provisioning/site.yml
 
 ### Testing
 
-Ansible provide a set of tools to test your playbook and roles ([Article Ansible](https://www.ansible.com/blog/testing-ansible-roles-with-docker)
-[Molecule framework](https://github.com/ansible/molecule) can help too
+Ansible provide a set of tools to test your playbook and roles ([Article Ansible](https://www.ansible.com/blog/testing-ansible-roles-with-docker))
+
+Syntax check 
+
+```bash
+ansible-playbook --syntax-check playbook.yml
+```
+
+Style check (installation)
+
+
+```bash
+pip install ansible-lint
+```
+
+Style check run
+
+```bash
+ansible-lint playbook.yml
+```
+
+To go further, look at [Molecule framework](https://github.com/ansible/molecule)
 
 
 ## Exercices
