@@ -14,7 +14,8 @@ Learn how to organize your ansible code and manage environnements
 
 ## What you will build
 
-@todo : schema
+![gitlab ci cd](./assets/ansible_proxy_web.png)
+
 
 ## Provided for this lab
 

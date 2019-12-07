@@ -1,19 +1,19 @@
 # Gitlab + CI + CD with Ansible
 
-@todo : Vagrant + ansible
+Learn how to manage CI and CD with gitlab + docker + ansible 
 
 ## What you will learn
 
-@todo
+* setup a gitlab server
+* configure runner for CI 
+* deploy code with ansible for CD
 
 ## What you will build
 
-@todo : schema
+![gitlab ci cd](./assets/gitlab_ci_cd.png)
+
 
 ## What you Need
-
-@todo
-
 
 * Install gitlabce with ansible galaxy
 * scm git to build code
