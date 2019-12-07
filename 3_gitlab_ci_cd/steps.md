@@ -15,8 +15,6 @@
 @todo
 
 
-
-
 * Install gitlabce with ansible galaxy
 * scm git to build code
 * deploy with ansible if build ok
@@ -42,7 +40,6 @@ Check everythin ok
 
 ```bash
 ansible gitlab -i inventory -m ping
-
 ```
 
 ## playbook gitlab
@@ -80,47 +77,165 @@ ansible -i inventory gitlab-runner  gitlab-runner.yml --extra-var gitlab_registr
 
 
 
-## run project ci tests
+## Configure CI
 
-gitlabci + docker runner
+### Clone project 
 
-## deploy on success
+example : @todo
 
+
+### Configure gitlab ci
+
+add .gitlab-ci.yml
+
+[Example by gitlabci](https://gitlab.com/gitlab-examples/ssh-private-key/) 
+
+
+Example for Nodejs 
 
 ```yaml
-deploy_app:
-  stage: deploy
-  tags:
-    - ansible
+image: node:11
+
+stages:
+  - build
+  - test
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+    - dist
+
+install_dependencies:
+  stage: build
   script:
-    - 'ansible-playbook -i staging deploy.yml'
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - node_modules/
+
+testing_testing:
+  stage: test
+  script: npm test
 ```
 
+
+## Configure CD
+
+Create deploy key to let web werver access repository
+
+`project > settings > Repository > Deploy Keys`
+
+
+
+Use docker image with andible to deploy to our server
+
+`gableroux/ansible:2.7.10`
+
+
+Use secret environement provided by gitlab
+
+`project > settings > CI/CD > Variable`
+
+
+Create `INVENTORY` file variable with content 
+
+```
+[web]
+192.168.33.31
+```
+
+Create `SSH_PRIVATE_KEY` file variable with content of the web vm private key 
+
+
+Path for our vagrant web VM
+
+```
+.vagrant/machines/webdev/virtualbox/private_key
+```
+
+
+
+Update `gitlab-ci.yml` to use these variables in deploy stage
+
+```yaml
+  
+.ansible: &ansible # Hidden key that defines an anchor
+  stage: deploy
+  #when: manual
+  image: gableroux/ansible:2.7.10
+  before_script:
+    ## Install ssh-agent if not already installed, it is required by Docker.
+    ## (change apt-get to yum if you use an RPM-based image)
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    
+    ## Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+
+    ## Create the SSH directory and give it the right permissions
+    - mkdir ~/.ssh/
+    - chmod 700 ~/.ssh
+    
+    # custom ssh config
+    #- echo "$SSH_CONFIG" > ~/.ssh/config
+
+    #- echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - ssh-keyscan 192.168.33.31 >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    
+    - chmod 600 $SSH_PRIVATE_KEY
+    #- echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+
+deploy-master:
+  <<: *ansible  # Merge the contents of the 'ansible' alias
+  script:
+
+    - ansible --version
+    - ansible all -m copy -a "src=dist/ dest=/var/www/html mode=0755 owner=www-data group=www-data" -i $INVENTORY -b  -u vagrant --private-key=$SSH_PRIVATE_KEY
+  only:
+    - master
+
+```
+
+
+An optimization would use playbook
+
+```yaml
+---
+- host: web
+  task:
+    - name: Create install directory
+      file:
+        state: directory
+        path: /var/www/html
+        owner: www-data
+        group: www-data
+        mode: 0755
+    - name: Copy files to remote host
+      copy:
+        src: dist
+        dest: /var/www/html
+        owner: www-data
+        group: www-data
+        mode: 0755
+
+```
+
+To deploy our application using our playbook we execute the following Ansible command.
 
 ```bash
-- hosts: gitlab_runner
-  …
-  - tasks:
-   - name: create ssh key if it does not exist
-      expect:
-        command: ssh-keygen -t rsa
-        # only creates the key if the file does not exist
-        creates: "{{ runner_user_home }}/.ssh/id_rsa"
-        ...
-        responses:
-          "file": "{{ runner_user_home }}/.ssh/id_rsa"
-          "passphrase": ""
-   - name: read public key
-      command: "cat {{ runner_user_home }}/.ssh/id_rsa.pub"
-      register: runner_pub_key
-
-
-- hosts: deploy_target
-  …
-  - tasks:
-   - name: add deploy key to authorized keys
-      authorized_key:
-        user: "{{ user }}"
-        key: "{{ hostvars[ deploy_source_host ].runner_pub_key.stdout}}"
+ansible-playbook -i $INVENTORY deploy.yml -b -u vagrant  --private-key=$SSH_PRIVATE_KEY
 
 ```
+
+
+## Going Further
+
+Beware This code is for demonstration only :)
+
+
+* store artefacts in repository and pass reference to ansible
+* ansible tower / awx to manage playbooks / privileges / inventories
+  
+
