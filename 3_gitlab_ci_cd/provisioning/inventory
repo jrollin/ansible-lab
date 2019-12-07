@@ -1,8 +1,8 @@
 [gitlab]
-gitlab ansible_ssh_host=192.168.33.10 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/gitlab/virtualbox/private_key'
+gitlab1 ansible_ssh_host=192.168.33.10 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/gitlab/virtualbox/private_key'
 
-[gitlab-runner]
+[gitlabrunner]
 gitlabrunner1 ansible_ssh_host=192.168.33.21 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/gitlabrunner1/virtualbox/private_key'
 
 [web]
-webdev ansible_ssh_host=192.168.33.31 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/webdev/virtualbox/private_key'
+webdev1 ansible_ssh_host=192.168.33.31 ansible_ssh_port=22 ansible_ssh_user=vagrant ansible_ssh_private_key_file='.vagrant/machines/webdev/virtualbox/private_key'

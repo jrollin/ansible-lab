@@ -1,0 +1,26 @@
+# site.yml
+---
+
+- name: Apply common configuration to all hosts
+  hosts: gitlab
+  remote_user: vagrant
+  become: yes
+  
+  roles:
+    - { role: geerlingguy.gitlab, become: true }
+
+- name: Configure gitlab runner
+  hosts: gitlabrunner
+  remote_user: vagrant
+  become: yes
+  
+  roles:
+    - gitlabrunner
+
+- name: Configure web servers
+  hosts: web
+  remote_user: vagrant
+  become: yes
+  
+  roles:
+    - web

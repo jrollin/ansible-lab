@@ -1,4 +1,4 @@
-gitlab_external_url: "http://192.168.33.10"
+--- 
 
 #todo change with url and token
 gitlab_url: 'http://192.168.33.10'
