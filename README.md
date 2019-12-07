@@ -9,9 +9,9 @@ Pratice Ansible with virtual machines (vagrant)
 
 ## Labs
 
-* [Essentials](1_essentials/steps.md)
-* [Web app](2_webapp/steps.md)
-* [gitlab + ci + cd](3_gitlab_ci_cd/steps.md)
+* [Essentials](1_essentials/README.md)
+* [Web app](2_webapp/README.md)
+* [gitlab + ci + cd](3_gitlab_ci_cd/README.md)
 
 ## Tools used
 
