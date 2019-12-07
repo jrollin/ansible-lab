@@ -30,7 +30,6 @@ Nb: you can use another recommanded box provider "bento"
 ```bash
 vagrant init bento/centos-7.7
 vagrant init bento/ubuntu-18.10
-
 ```
 
 Run box
@@ -288,6 +287,111 @@ ansible-playbook -i hosts playbook.yml
 > Nb: we do not define host 'all'
 
 
+## Playbooks useful tips
+
+
+### Use loop
+
+Example for creating user ssh
+
+```yaml
+## users.yml
+---
+- hosts: "localhost"
+  connection: "local"
+  vars:
+    users:
+    - "paul"
+    - "tanya"
+    - "ruby"
+  tasks:
+  - name: "Create user accounts"
+    user:
+      name: "{{ item }}"
+      groups: "admin,www-data"
+      state: "present"
+    with_items: "{{ users }}"
+  - name: "Add authorized keys"
+    authorized_key:
+      user: "{{ item }}"
+      key: "{{ lookup('file', 'files/'+ item + '.key.pub') }}"
+    with_items: "{{ users }}"
+```
+
+Store ssh pub keys in files directory 
+
+```bash
+├── files
+│   ├── paul.key.pub
+│   ├── ruby.key.pub
+│   └── tanya.key.pub
+├── users.yml
+```
+
+Change sudoer list with regex
+
+```yaml
+- name: "Allow admin users to sudo without a password"
+    lineinfile:
+      dest: "/etc/sudoers"
+      state: "present"
+      regexp: "^%admin"
+      line: "%admin ALL=(ALL) NOPASSWD: ALL"
+```
+
+
+### Store task result
+
+Example : Use URI module and debug variable
+
+```yaml
+- name: Get page content
+  uri: 
+    url: "http://169.254.169.254/info"
+    return_content: yes
+  register: page_result
+
+- name: Show page_result
+  debug: var=page_result
+
+```
+
+### Execute shell script
+
+Example to run docker cmd
+
+```yaml
+- name: Run Container
+  shell: "docker run -p 80:5000 -d playground:pgflask"
+  args:
+   chdir: "/tmp"
+  become: yes
+```
+
+> nb: you assure docker cli is installed before
+
+### Task executed only when condition
+
+Download `docker-compose` script only if not exists 
+
+```yaml
+- name: Check if docker-compose file exists
+  stat: 
+    path: /usr/local/bin/docker-compose
+  register: docker_compose
+
+- name: Install Docker-compose
+  shell: curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose"
+  become: true
+  when: docker_compose.stat.exists == False
+
+```
+
+you can cast variable 
+
+```yaml
+when: whatever_var|bool
+```
 
 ## Exercice
 
