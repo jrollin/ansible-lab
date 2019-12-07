@@ -1,5 +1,9 @@
 # Getting starting with Ansible Lab
 
+![Vagrant](./assets/vagrant-logo.png)
+![Ansible](./assets/red-hat-ansible-logo.png)
+
+
 Pratice Ansible with virtual machines (vagrant)
 
 
