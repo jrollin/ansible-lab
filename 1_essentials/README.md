@@ -84,9 +84,10 @@ Debian like
 
 ```bash
 #!/bin/bash
- sudo apt-get update
- sudo apt-get install -y nginx
- touch /var/www/html/index.html
+sudo apt-get update
+sudo apt-get install -y nginx
+mkdir -p /var/www/html/
+touch /var/www/html/index.html
  echo "Hello !" >> /var/www/html/index.html
 ```
 
@@ -95,9 +96,8 @@ Centos
 ```bash
 #!/bin/bash
 sudo yum update
-sudo yum install epel-release
-sudo yum install nginx
-mkdir /var/www/html/
+sudo yum install epel-release nginx 
+mkdir -p /var/www/html/
 touch /var/www/html/index.html
 echo "Hello !" >> /var/www/html/index.html
 ```
