@@ -104,11 +104,13 @@ echo "Hello !" >> /var/www/html/index.html
 sudo systemctl start nginx
 ```
 
+Example with ubuntu box
+
 ```ruby
 Vagrant.configure("2") do |config|
     # Configure web server machine
      config.vm.define "web" do |web1|
-         web1.vm.box = "bento/centos-7.7"
+         web1.vm.box = "bento/ubuntu-18.10"
          web1.vm.network "private_network", ip: "192.169.10.10"
          web1.vm.provision :shell do |shell|
              shell.path = "web.sh"
