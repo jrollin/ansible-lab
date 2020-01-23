@@ -95,11 +95,13 @@ Centos
 
 ```bash
 #!/bin/bash
+service httpd stop
 sudo yum update
 sudo yum install -y epel-release nginx 
 mkdir -p /var/www/html/
 touch /var/www/html/index.html
 echo "Hello !" >> /var/www/html/index.html
+sudo systemctl start nginx
 ```
 
 ```ruby
@@ -176,6 +178,7 @@ Use Ping module for all machine with all parameters specified
 ansible all -i '192.168.33.10,' -m ping -u vagrant  --private-key=./.vagrant/machines/default/virtualbox/private_key 
 ```
 > Nb: this method is not the "ansible way", you should use an inventory file
+> Nb: note the "," required with inline inventory
 
 
 Define inventory file 'hosts' and add this line
@@ -283,6 +286,8 @@ config.vm.provision "ansible_local" do |ans|
     ans.install_mode = "pip"
 end
 ```
+
+> Nb: use playbook path on remote host ! (ex /home/vagrant/playbook.yml)
 
 Reload VM with new provision
 
