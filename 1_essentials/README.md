@@ -177,7 +177,9 @@ Use Ping module for all machine with all parameters specified
 ```bash
 ansible all -i '192.168.33.10,' -m ping -u vagrant  --private-key=./.vagrant/machines/default/virtualbox/private_key 
 ```
+
 > Nb: this method is not the "ansible way", you should use an inventory file
+
 > Nb: note the "," required with inline inventory
 
 
