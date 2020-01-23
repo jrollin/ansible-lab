@@ -77,8 +77,10 @@ ping -c 3 192.169.10.10
 ```
 
 ### Provisoning With shell script
+
 Basic shell provisioning :
 
+Debian like
 
 ```bash
 #!/bin/bash
@@ -86,6 +88,18 @@ Basic shell provisioning :
  sudo apt-get install -y nginx
  touch /var/www/html/index.html
  echo "Hello !" >> /var/www/html/index.html
+```
+
+Centos 
+
+```bash
+#!/bin/bash
+sudo yum update
+sudo yum install epel-release
+sudo yum install nginx
+mkdir /var/www/html/
+touch /var/www/html/index.html
+echo "Hello !" >> /var/www/html/index.html
 ```
 
 ```ruby
