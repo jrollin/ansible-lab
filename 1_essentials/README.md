@@ -96,7 +96,7 @@ Centos
 ```bash
 #!/bin/bash
 sudo yum update
-sudo yum install epel-release nginx 
+sudo yum install -y epel-release nginx 
 mkdir -p /var/www/html/
 touch /var/www/html/index.html
 echo "Hello !" >> /var/www/html/index.html
